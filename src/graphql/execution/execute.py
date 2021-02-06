@@ -627,7 +627,10 @@ class ExecutionContext:
                 # noinspection PyShadowingNames
                 async def await_result():
                     try:
-                        return await result
+                        intermediate_result = await result
+                        if isawaitable(intermediate_result):
+                            return await intermediate_result
+                        return intermediate_result
                     except GraphQLError as error:
                         return error
                     except Exception as error:
